@@ -1,0 +1,110 @@
+openapi: 3.0.0
+info:
+  title: Library Service API
+  description: API Documentation for Library Service
+  version: "1.0"
+servers:
+  - url: /library
+paths:
+  /add:
+    post:
+      summary: Add a new book to the library
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookRequest'
+      responses:
+        '201':
+          description: Book added to the library
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryBookDto'
+  /getFreeBooks:
+    get:
+      summary: Get all available books for borrowing
+      responses:
+        '200':
+          description: List of free books available for borrowing
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LibraryBookDto'
+  /update/{bookId}:
+    put:
+      summary: Update book details in the library
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LibraryBookDto'
+      responses:
+        '200':
+          description: Book details updated
+  /borrow/{bookId}:
+    post:
+      summary: Borrow a book from the library
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Book borrowed successfully
+  /return/{bookId}:
+    post:
+      summary: Return a borrowed book to the library
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Book returned successfully
+  /delete/{bookId}:
+    delete:
+      summary: Delete a book from the library
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Book deleted from the library
+components:
+  schemas:
+    BookRequest:
+      type: object
+      required:
+        - bookId
+      properties:
+        bookId:
+          type: integer
+    LibraryBookDto:
+      type: object
+      properties:
+        bookId:
+          type: integer
+        takenAt:
+          type: string
+          format: date-time
+        returnDueAt:
+          type: string
+          format: date-time

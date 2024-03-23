@@ -1,0 +1,94 @@
+version: '3.8'
+services:
+  service-registry:
+    build:
+      context: ./service-registry
+      dockerfile: Dockerfile
+    container_name: service-registry
+    ports:
+      - '8761:8761'
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - '8081:8081'
+    depends_on:
+      - service-registry
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
+
+  book-service:
+    container_name: book-service
+    build:
+      context: ./book-service
+      dockerfile: Dockerfile
+    depends_on:
+      - service-registry
+      - postgres-books
+    ports:
+      - '8090:8090'
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-books:5431/bookdb
+
+  postgres-books:
+    container_name: postgres-books
+    image: postgres
+    ports:
+      - '5431:5431'
+    environment:
+      - POSTGRES_DB=bookdb
+      - POSTGRES_USER=postgres
+      - PGDATA=/data/postgres
+      - POSTGRES_PASSWORD=1122
+    volumes:
+      - ./postgres-books:/data/postgres
+    command: -p 5431
+    restart: always
+
+  library-service:
+    container_name: library-service
+    build:
+      context: ./library-service
+      dockerfile: Dockerfile
+    ports:
+      - '8091:8091'
+    depends_on:
+      - service-registry
+      - postgres-library
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-library:5432/librarydb
+
+  postgres-library:
+    container_name: postgres-library
+    image: postgres
+    expose:
+      - '5432'
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_DB=librarydb
+      - POSTGRES_USER=postgres
+      - PGDATA=/data/postgres
+      - POSTGRES_PASSWORD=1122
+    volumes:
+      - ./postgres-library:/data/postgres
+    command: -p 5432
+    restart: always
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    ports:
+      - "8001:8080"
+    volumes:
+      - ./swagger-ui:/usr/share/nginx/html/swagger
+    environment:
+      - API_URL_1=swagger/book-service.yaml
+      - API_URL_2=swagger/library-service.yaml
