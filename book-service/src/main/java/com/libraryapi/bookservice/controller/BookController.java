@@ -24,13 +24,13 @@ public class BookController {
         return bookService.viewBookList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public BookDto getById(@PathVariable long id) {
         log.info("Fetching the book with ID {} from the catalog", id);
         return bookService.viewBookDetailsById(id);
     }
 
-    @GetMapping("/{isbn}")
+    @GetMapping("/isbn/{isbn}")
     public BookDto getByIsbn(@PathVariable String isbn) {
         log.info("Fetching the book with ISBN {} from the catalog", isbn);
         return bookService.viewBookDetailsByIsbn(isbn);
