@@ -35,7 +35,7 @@ public class BookServiceImpl implements BookService {
     public BookDto findBookByIsbn(String isbn) {
         BookEntity book = bookRepository.findByIsbn(isbn);
         if (book == null) {
-            throw new BookNotFoundException("Book not found with ISBN: " + isbn);
+            throw new BookNotFoundException(isbn);
         }
         return convertToDto(book);
     }
