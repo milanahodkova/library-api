@@ -14,8 +14,8 @@ public class LibraryBookEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int id;
-    private int bookId;
+    private long id;
+    private long bookId;
     private LocalDateTime borrowedAt;
     private LocalDateTime returnDueAt;
 }

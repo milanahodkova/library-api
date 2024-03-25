@@ -4,6 +4,7 @@ import com.libraryapi.libraryservice.dto.BookRequest;
 import com.libraryapi.libraryservice.dto.LibraryBookDto;
 import com.libraryapi.libraryservice.service.LibraryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,42 +14,46 @@ import java.util.List;
 @RestController
 @RequestMapping("/library")
 @RequiredArgsConstructor
+@Slf4j
 public class LibraryController {
 
     private final LibraryService libraryService;
 
-    @PostMapping("/add")
-    public ResponseEntity<LibraryBookDto> addBook(@RequestBody BookRequest bookRequest){
-        LibraryBookDto addedBook = libraryService.addBook(bookRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body((addedBook));
+    @GetMapping("/availableBooks")
+    public List<LibraryBookDto> getAvailableBooks() {
+        log.info("Fetching the list of available books in the catalog");
+        return libraryService.viewAvailableBookList();
     }
 
-    @GetMapping("/getFreeBooks")
-    public ResponseEntity<List<LibraryBookDto>> getFreeBooks(){
-        List<LibraryBookDto> freeBooks = libraryService.getFreeBooks();
-        return new ResponseEntity<>(freeBooks, HttpStatus.OK);
+    @PostMapping("/add")
+    @ResponseStatus(HttpStatus.CREATED)
+    public LibraryBookDto add(@RequestBody BookRequest bookRequest) {
+        log.info("Adding book to the library with ID {}", bookRequest.getBookId());
+        return libraryService.addBookToLibrary(bookRequest);
     }
 
     @PutMapping("/update/{bookId}")
-    public ResponseEntity<LibraryBookDto> updateBook(@PathVariable int bookId, @RequestBody LibraryBookDto libraryBookDto){
-        LibraryBookDto updatedBook = libraryService.updateBook(bookId, libraryBookDto);
-        return new ResponseEntity<>(updatedBook, HttpStatus.OK);
+    public LibraryBookDto updateBook(@PathVariable long bookId, @RequestBody LibraryBookDto libraryBookDto) {
+        log.info("Updating book with ID {}", bookId);
+        return libraryService.editLibraryBookDetails(bookId, libraryBookDto);
+
     }
 
     @PostMapping("/borrow/{bookId}")
-    public ResponseEntity<String>  borrowBook(@PathVariable int bookId){
+    public void borrowBook(@PathVariable long bookId) {
+        log.info("Borrowing book with ID {}", bookId);
         libraryService.borrowBook(bookId);
-        return ResponseEntity.ok("Book borrowed successfully");
     }
 
     @PostMapping("/return/{bookId}")
-    public ResponseEntity<String> returnBook(@PathVariable int bookId){
+    public void returnBook(@PathVariable long bookId) {
+        log.info("Returning book with ID {}", bookId);
         libraryService.returnBook(bookId);
-        return ResponseEntity.ok("Book returned successfully");
     }
 
     @DeleteMapping("/delete/{bookId}")
-    public void deleteBook(@PathVariable int bookId) {
+    public void deleteBook(@PathVariable long bookId) {
+        log.info("Deleting book with ID {}", bookId);
         libraryService.deleteBook(bookId);
     }
 }

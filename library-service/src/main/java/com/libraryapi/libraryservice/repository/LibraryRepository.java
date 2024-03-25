@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface LibraryRepository extends JpaRepository<LibraryBookEntity, Integer> {
     List<LibraryBookEntity> findByReturnDueAtIsNull();
 
-    Optional<LibraryBookEntity> findByBookId(int bookId);
+    Optional<LibraryBookEntity> findByBookId(long bookId);
 }

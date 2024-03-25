@@ -6,15 +6,15 @@ import com.libraryapi.libraryservice.dto.LibraryBookDto;
 import java.util.List;
 
 public interface LibraryService {
-    List<LibraryBookDto> getFreeBooks();
+    List<LibraryBookDto> viewAvailableBookList();
 
-    LibraryBookDto updateBook(int bookId, LibraryBookDto libraryBookDto);
+    LibraryBookDto editLibraryBookDetails(long bookId, LibraryBookDto libraryBookDto);
 
-    LibraryBookDto addBook(BookRequest bookRequest);
+    LibraryBookDto addBookToLibrary(BookRequest bookRequest);
 
-    void borrowBook(int bookId);
+    void borrowBook(long bookId);
 
-    void returnBook(int bookId);
+    void returnBook(long bookId);
 
-    void deleteBook(int bookId);
+    void deleteBook(long bookId);
 }
