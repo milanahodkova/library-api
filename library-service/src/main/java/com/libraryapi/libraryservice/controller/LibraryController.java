@@ -32,7 +32,7 @@ public class LibraryController {
         return libraryService.addBookToLibrary(bookRequest);
     }
 
-    @PutMapping("/update/{bookId}")
+    @PutMapping("/{bookId}")
     public LibraryBookDto updateBook(@PathVariable long bookId, @RequestBody LibraryBookDto libraryBookDto) {
         log.info("Updating book with ID {}", bookId);
         return libraryService.editLibraryBookDetails(bookId, libraryBookDto);
@@ -51,7 +51,7 @@ public class LibraryController {
         libraryService.returnBook(bookId);
     }
 
-    @DeleteMapping("/delete/{bookId}")
+    @DeleteMapping("/{bookId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBook(@PathVariable long bookId) {
         log.info("Deleting book with ID {}", bookId);

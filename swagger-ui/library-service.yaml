@@ -6,6 +6,18 @@ info:
 servers:
   - url: /library
 paths:
+  /availableBooks:
+    get:
+      summary: Get all available books in the library
+      responses:
+        '200':
+          description: List of available books in the library
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LibraryBookDto'
   /add:
     post:
       summary: Add a new book to the library
@@ -22,19 +34,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LibraryBookDto'
-  /getFreeBooks:
-    get:
-      summary: Get all available books for borrowing
-      responses:
-        '200':
-          description: List of free books available for borrowing
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/LibraryBookDto'
-  /update/{bookId}:
+  /{bookId}:
     put:
       summary: Update book details in the library
       parameters:
@@ -76,7 +76,7 @@ paths:
       responses:
         '200':
           description: Book returned successfully
-  /delete/{bookId}:
+  /{bookId}:
     delete:
       summary: Delete a book from the library
       parameters:
