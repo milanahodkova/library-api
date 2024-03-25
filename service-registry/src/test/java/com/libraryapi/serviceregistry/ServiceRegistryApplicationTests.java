@@ -1,4 +1,4 @@
-package com.example.serviceregistry;
+package com.libraryapi.serviceregistry;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
