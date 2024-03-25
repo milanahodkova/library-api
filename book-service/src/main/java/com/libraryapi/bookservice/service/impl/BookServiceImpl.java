@@ -2,6 +2,7 @@ package com.libraryapi.bookservice.service.impl;
 
 import com.libraryapi.bookservice.dto.BookDto;
 import com.libraryapi.bookservice.dto.BookRequest;
+import com.libraryapi.bookservice.exception.BookAlreadyExistsException;
 import com.libraryapi.bookservice.exception.BookNotFoundException;
 import com.libraryapi.bookservice.feign.LibraryClient;
 import com.libraryapi.bookservice.model.BookEntity;
@@ -20,28 +21,31 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final ModelMapper modelMapper;
     private final LibraryClient libraryClient;
-    public List<BookDto> findAll() {
+
+    public List<BookDto> viewBookList() {
         List<BookEntity> books = bookRepository.findAll();
         return books.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    public BookDto findBookById(int id) {
-        BookEntity book = getById(id);
+    public BookDto viewBookDetailsById(long id) {
+        BookEntity book = bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException(id));
         return convertToDto(book);
     }
 
-    public BookDto findBookByIsbn(String isbn) {
-        BookEntity book = bookRepository.findByIsbn(isbn);
-        if (book == null) {
-            throw new BookNotFoundException(isbn);
-        }
+    public BookDto viewBookDetailsByIsbn(String isbn) {
+        BookEntity book = bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new BookNotFoundException(isbn));
         return convertToDto(book);
     }
 
-    public BookDto addBook(BookDto bookDto) {
+    public BookDto addBookToCatalog(BookDto bookDto) {
         BookEntity book = convertToEntity(bookDto);
+        if (bookRepository.existsByIsbn(book.getIsbn())) {
+            throw new BookAlreadyExistsException(book.getIsbn());
+        }
         BookEntity savedBook = bookRepository.save(book);
 
         libraryClient.addBook(new BookRequest(savedBook.getId()));
@@ -49,21 +53,23 @@ public class BookServiceImpl implements BookService {
         return convertToDto(savedBook);
     }
 
-    public BookDto updateBook(int id, BookDto bookDto) {
-        BookEntity existingBook = getById(id);
-        existingBook.setIsbn(bookDto.getIsbn());
-        existingBook.setTitle(bookDto.getTitle());
-        existingBook.setAuthor(bookDto.getAuthor());
-        existingBook.setGenre(bookDto.getGenre());
-        existingBook.setDescription(bookDto.getDescription());
-
-        BookEntity updatedBook = bookRepository.save(existingBook);
+    public BookDto editBookDetails(long id, BookDto bookDto) {
+        BookEntity updatedBook = bookRepository.findById(id)
+                .map(existingBook -> {
+                    existingBook.setTitle(bookDto.getTitle());
+                    existingBook.setDescription(bookDto.getDescription());
+                    existingBook.setAuthor(bookDto.getAuthor());
+                    existingBook.setGenre(bookDto.getGenre());
+                    return bookRepository.save(existingBook);
+                })
+                .orElseThrow(() -> new BookNotFoundException(id));
 
         return convertToDto(updatedBook);
     }
 
-    public void deleteBook(int id) {
-        BookEntity book = getById(id);
+    public void removeBookFromCatalog(long id) {
+        BookEntity book = bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException(id));
         bookRepository.delete(book);
         libraryClient.deleteBook(id);
     }
@@ -74,10 +80,5 @@ public class BookServiceImpl implements BookService {
 
     private BookEntity convertToEntity(BookDto bookDto) {
         return modelMapper.map(bookDto, BookEntity.class);
-    }
-
-    private BookEntity getById(int id) {
-        return bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException("Book not found with id: " + id));
     }
 }

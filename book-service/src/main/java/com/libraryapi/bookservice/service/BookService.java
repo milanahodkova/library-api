@@ -5,15 +5,15 @@ import com.libraryapi.bookservice.dto.BookDto;
 import java.util.List;
 
 public interface BookService {
-    List<BookDto> findAll();
+    List<BookDto> viewBookList();
 
-    BookDto findBookById(int id);
+    BookDto viewBookDetailsById(long id);
 
-    BookDto findBookByIsbn(String isbn);
+    BookDto viewBookDetailsByIsbn(String isbn);
 
-    BookDto addBook(BookDto bookDto);
+    BookDto addBookToCatalog(BookDto bookDto);
 
-    BookDto updateBook(int id, BookDto bookDto);
+    BookDto editBookDetails(long id, BookDto bookDto);
 
-    void deleteBook(int id);
+    void removeBookFromCatalog(long id);
 }
