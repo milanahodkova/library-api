@@ -1,6 +1,6 @@
-package com.example.bookservice.feign;
+package com.libraryapi.bookservice.feign;
 
-import com.example.bookservice.dto.BookRequest;
+import com.libraryapi.bookservice.dto.BookRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

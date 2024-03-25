@@ -1,4 +1,4 @@
-package com.example.bookservice.config;
+package com.libraryapi.bookservice.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

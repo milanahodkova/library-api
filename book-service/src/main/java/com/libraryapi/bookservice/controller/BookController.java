@@ -1,7 +1,7 @@
-package com.example.bookservice.controller;
+package com.libraryapi.bookservice.controller;
 
-import com.example.bookservice.dto.BookDto;
-import com.example.bookservice.service.BookService;
+import com.libraryapi.bookservice.dto.BookDto;
+import com.libraryapi.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

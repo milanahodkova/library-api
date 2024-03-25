@@ -1,6 +1,6 @@
-package com.example.bookservice.service;
+package com.libraryapi.bookservice.service;
 
-import com.example.bookservice.dto.BookDto;
+import com.libraryapi.bookservice.dto.BookDto;
 
 import java.util.List;
 

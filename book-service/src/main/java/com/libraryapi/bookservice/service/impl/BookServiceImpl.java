@@ -1,16 +1,15 @@
-package com.example.bookservice.service.impl;
+package com.libraryapi.bookservice.service.impl;
 
-import com.example.bookservice.dto.BookDto;
-import com.example.bookservice.dto.BookRequest;
-import com.example.bookservice.exception.BookNotFoundException;
-import com.example.bookservice.feign.LibraryClient;
-import com.example.bookservice.model.BookEntity;
-import com.example.bookservice.repository.BookRepository;
-import com.example.bookservice.service.BookService;
+import com.libraryapi.bookservice.dto.BookDto;
+import com.libraryapi.bookservice.dto.BookRequest;
+import com.libraryapi.bookservice.exception.BookNotFoundException;
+import com.libraryapi.bookservice.feign.LibraryClient;
+import com.libraryapi.bookservice.model.BookEntity;
+import com.libraryapi.bookservice.repository.BookRepository;
+import com.libraryapi.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;

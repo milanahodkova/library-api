@@ -1,4 +1,4 @@
-package com.example.bookservice.exception;
+package com.libraryapi.bookservice.exception;
 
 public class BookNotFoundException extends RuntimeException {
     public BookNotFoundException(String message){
