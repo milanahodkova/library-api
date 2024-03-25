@@ -52,6 +52,7 @@ public class LibraryController {
     }
 
     @DeleteMapping("/delete/{bookId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBook(@PathVariable long bookId) {
         log.info("Deleting book with ID {}", bookId);
         libraryService.deleteBook(bookId);

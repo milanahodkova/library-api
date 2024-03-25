@@ -2,6 +2,7 @@ package com.libraryapi.bookservice.controller;
 
 import com.libraryapi.bookservice.dto.BookDto;
 import com.libraryapi.bookservice.service.BookService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,13 +38,13 @@ public class BookController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public BookDto add(@RequestBody BookDto bookDto) {
+    public BookDto add(@Valid @RequestBody BookDto bookDto) {
         log.info("Adding a new book to the catalog with ISBN {}", bookDto.getIsbn());
         return bookService.addBookToCatalog(bookDto);
     }
 
     @PutMapping("/{id}")
-    public BookDto update(@PathVariable long id, @RequestBody BookDto bookDto) {
+    public BookDto update(@PathVariable long id, @Valid @RequestBody BookDto bookDto) {
         log.info("Updating book with ID {}", id);
         return bookService.editBookDetails(id, bookDto);
     }
