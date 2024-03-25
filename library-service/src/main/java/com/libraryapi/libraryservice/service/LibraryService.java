@@ -1,7 +1,7 @@
-package com.example.libraryservice.service;
+package com.libraryapi.libraryservice.service;
 
-import com.example.libraryservice.dto.BookRequest;
-import com.example.libraryservice.dto.LibraryBookDto;
+import com.libraryapi.libraryservice.dto.BookRequest;
+import com.libraryapi.libraryservice.dto.LibraryBookDto;
 
 import java.util.List;
 

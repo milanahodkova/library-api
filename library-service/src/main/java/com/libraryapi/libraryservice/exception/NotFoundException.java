@@ -1,4 +1,4 @@
-package com.example.libraryservice.exception;
+package com.libraryapi.libraryservice.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

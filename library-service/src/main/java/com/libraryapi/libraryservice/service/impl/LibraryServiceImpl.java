@@ -1,11 +1,11 @@
-package com.example.libraryservice.service.impl;
+package com.libraryapi.libraryservice.service.impl;
 
-import com.example.libraryservice.dto.BookRequest;
-import com.example.libraryservice.dto.LibraryBookDto;
-import com.example.libraryservice.exception.NotFoundException;
-import com.example.libraryservice.model.LibraryBookEntity;
-import com.example.libraryservice.repository.LibraryRepository;
-import com.example.libraryservice.service.LibraryService;
+import com.libraryapi.libraryservice.dto.BookRequest;
+import com.libraryapi.libraryservice.dto.LibraryBookDto;
+import com.libraryapi.libraryservice.exception.NotFoundException;
+import com.libraryapi.libraryservice.model.LibraryBookEntity;
+import com.libraryapi.libraryservice.repository.LibraryRepository;
+import com.libraryapi.libraryservice.service.LibraryService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;

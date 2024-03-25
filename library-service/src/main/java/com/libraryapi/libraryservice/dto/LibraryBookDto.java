@@ -1,4 +1,4 @@
-package com.example.libraryservice.dto;
+package com.libraryapi.libraryservice.dto;
 
 import lombok.Data;
 

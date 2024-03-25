@@ -1,8 +1,8 @@
-package com.example.libraryservice.controller;
+package com.libraryapi.libraryservice.controller;
 
-import com.example.libraryservice.dto.BookRequest;
-import com.example.libraryservice.dto.LibraryBookDto;
-import com.example.libraryservice.service.LibraryService;
+import com.libraryapi.libraryservice.dto.BookRequest;
+import com.libraryapi.libraryservice.dto.LibraryBookDto;
+import com.libraryapi.libraryservice.service.LibraryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

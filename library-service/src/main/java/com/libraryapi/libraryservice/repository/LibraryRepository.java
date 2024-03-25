@@ -1,6 +1,6 @@
-package com.example.libraryservice.repository;
+package com.libraryapi.libraryservice.repository;
 
-import com.example.libraryservice.model.LibraryBookEntity;
+import com.libraryapi.libraryservice.model.LibraryBookEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
