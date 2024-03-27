@@ -6,7 +6,6 @@ import com.libraryapi.libraryservice.service.LibraryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class LibraryController {
     }
 
     @PutMapping("/{bookId}")
-    public LibraryBookDto updateBook(@PathVariable long bookId, @RequestBody LibraryBookDto libraryBookDto) {
+    public LibraryBookDto update(@PathVariable long bookId, @RequestBody LibraryBookDto libraryBookDto) {
         log.info("Updating book with ID {}", bookId);
         return libraryService.editLibraryBookDetails(bookId, libraryBookDto);
 
@@ -53,8 +52,8 @@ public class LibraryController {
 
     @DeleteMapping("/{bookId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBook(@PathVariable long bookId) {
-        log.info("Deleting book with ID {}", bookId);
-        libraryService.deleteBook(bookId);
+    public void delete(@RequestBody BookRequest bookRequest) {
+        log.info("Deleting book with ID {}", bookRequest.getBookId());
+        libraryService.deleteBook(bookRequest.getBookId());
     }
 }

@@ -15,5 +15,5 @@ public interface BookService {
 
     BookDto editBookDetails(long id, BookDto bookDto);
 
-    void removeBookFromCatalog(long id);
+    BookDto removeBookFromCatalog(long id);
 }

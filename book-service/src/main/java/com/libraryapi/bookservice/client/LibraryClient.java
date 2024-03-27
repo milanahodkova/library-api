@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient("LIBRARY-SERVICE")
+@FeignClient("library-service")
 public interface LibraryClient {
 
     @PostMapping("/library/add")
-    ResponseEntity<String> addBook(@RequestBody BookRequest bookRequest);
+    ResponseEntity<String> add(@RequestBody BookRequest bookRequest);
 
     @DeleteMapping("/library/delete")
-    void deleteBook(@RequestParam long bookId);
+    void delete(@RequestBody BookRequest bookRequest);
 }

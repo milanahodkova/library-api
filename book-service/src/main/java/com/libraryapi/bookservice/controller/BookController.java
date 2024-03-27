@@ -43,7 +43,7 @@ public class BookController {
     public BookDto add(@Valid @RequestBody BookDto bookDto) {
         log.info("Adding a new book to the catalog with ISBN {}", bookDto.getIsbn());
         BookDto addedBook = bookService.addBookToCatalog(bookDto);
-        libraryClient.addBook(new BookRequest(addedBook.getId()));
+        libraryClient.add(new BookRequest(addedBook.getId()));
         return addedBook;
     }
 
@@ -57,7 +57,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
         log.info("Deleting book with ID {}", id);
-        bookService.removeBookFromCatalog(id);
-        libraryClient.deleteBook(id);
+        BookDto deletedBook = bookService.removeBookFromCatalog(id);
+        libraryClient.delete(new BookRequest(deletedBook.getId()));
     }
 }

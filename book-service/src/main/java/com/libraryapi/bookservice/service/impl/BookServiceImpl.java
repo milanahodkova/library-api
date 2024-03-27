@@ -51,6 +51,7 @@ public class BookServiceImpl implements BookService {
     public BookDto editBookDetails(long id, BookDto bookDto) {
         BookEntity updatedBook = bookRepository.findById(id)
                 .map(existingBook -> {
+                    existingBook.setIsbn(bookDto.getIsbn());
                     existingBook.setTitle(bookDto.getTitle());
                     existingBook.setDescription(bookDto.getDescription());
                     existingBook.setAuthor(bookDto.getAuthor());
@@ -62,10 +63,11 @@ public class BookServiceImpl implements BookService {
         return convertToDto(updatedBook);
     }
 
-    public void removeBookFromCatalog(long id) {
-        BookEntity book = bookRepository.findById(id)
+    public BookDto removeBookFromCatalog(long id) {
+        BookEntity deletedBook = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(id));
-        bookRepository.delete(book);
+        bookRepository.delete(deletedBook);
+        return convertToDto(deletedBook);
     }
 
     private BookDto convertToDto(BookEntity book) {
