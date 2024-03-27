@@ -13,7 +13,7 @@ import lombok.Data;
 public class BookEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String isbn;
     private String title;

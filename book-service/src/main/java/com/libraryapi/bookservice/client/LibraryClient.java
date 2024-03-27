@@ -1,4 +1,4 @@
-package com.libraryapi.bookservice.feign;
+package com.libraryapi.bookservice.client;
 
 import com.libraryapi.bookservice.dto.BookRequest;
 import org.springframework.cloud.openfeign.FeignClient;

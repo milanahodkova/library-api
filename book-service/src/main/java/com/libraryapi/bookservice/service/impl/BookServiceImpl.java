@@ -1,10 +1,8 @@
 package com.libraryapi.bookservice.service.impl;
 
 import com.libraryapi.bookservice.dto.BookDto;
-import com.libraryapi.bookservice.dto.BookRequest;
 import com.libraryapi.bookservice.exception.BookAlreadyExistsException;
 import com.libraryapi.bookservice.exception.BookNotFoundException;
-import com.libraryapi.bookservice.feign.LibraryClient;
 import com.libraryapi.bookservice.model.BookEntity;
 import com.libraryapi.bookservice.repository.BookRepository;
 import com.libraryapi.bookservice.service.BookService;
@@ -20,7 +18,6 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final ModelMapper modelMapper;
-    private final LibraryClient libraryClient;
 
     public List<BookDto> viewBookList() {
         List<BookEntity> books = bookRepository.findAll();
