@@ -15,5 +15,5 @@ public interface LibraryClient {
     ResponseEntity<String> addBook(@RequestBody BookRequest bookRequest);
 
     @DeleteMapping("/library/delete")
-    public void deleteBook(@RequestParam long bookId);
+    void deleteBook(@RequestParam long bookId);
 }

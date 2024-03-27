@@ -1,6 +1,8 @@
 package com.libraryapi.bookservice.controller;
 
 import com.libraryapi.bookservice.dto.BookDto;
+import com.libraryapi.bookservice.dto.BookRequest;
+import com.libraryapi.bookservice.feign.LibraryClient;
 import com.libraryapi.bookservice.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.List;
 @Slf4j
 public class BookController {
     private final BookService bookService;
+    private final LibraryClient libraryClient;
 
     @GetMapping()
     public List<BookDto> get() {
@@ -40,7 +43,9 @@ public class BookController {
     @ResponseStatus(HttpStatus.CREATED)
     public BookDto add(@Valid @RequestBody BookDto bookDto) {
         log.info("Adding a new book to the catalog with ISBN {}", bookDto.getIsbn());
-        return bookService.addBookToCatalog(bookDto);
+        BookDto addedBook = bookService.addBookToCatalog(bookDto);
+        libraryClient.addBook(new BookRequest(addedBook.getId()));
+        return addedBook;
     }
 
     @PutMapping("/{id}")
@@ -54,5 +59,6 @@ public class BookController {
     public void delete(@PathVariable long id) {
         log.info("Deleting book with ID {}", id);
         bookService.removeBookFromCatalog(id);
+        libraryClient.deleteBook(id);
     }
 }

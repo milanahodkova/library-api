@@ -48,8 +48,6 @@ public class BookServiceImpl implements BookService {
         }
         BookEntity savedBook = bookRepository.save(book);
 
-        libraryClient.addBook(new BookRequest(savedBook.getId()));
-
         return convertToDto(savedBook);
     }
 
@@ -71,7 +69,6 @@ public class BookServiceImpl implements BookService {
         BookEntity book = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(id));
         bookRepository.delete(book);
-        libraryClient.deleteBook(id);
     }
 
     private BookDto convertToDto(BookEntity book) {
