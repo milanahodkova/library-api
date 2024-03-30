@@ -1,7 +1,9 @@
 package com.libraryapi.libraryservice.service.impl;
 
 import com.libraryapi.libraryservice.dto.BookRequest;
-import com.libraryapi.libraryservice.dto.LibraryBookDto;
+import com.libraryapi.libraryservice.dto.LibraryBookRequest;
+import com.libraryapi.libraryservice.dto.LibraryBookListResponse;
+import com.libraryapi.libraryservice.dto.LibraryBookResponse;
 import com.libraryapi.libraryservice.exception.BookNotFoundException;
 import com.libraryapi.libraryservice.model.LibraryBookEntity;
 import com.libraryapi.libraryservice.repository.LibraryRepository;
@@ -19,45 +21,58 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class LibraryServiceImpl implements LibraryService {
+    private static final long BORROW_DURATION_DAYS = 30;
     private final LibraryRepository libraryRepository;
     private final ModelMapper modelMapper;
 
-    public List<LibraryBookDto> viewAvailableBookList() {
-        List<LibraryBookEntity> availableBooks = libraryRepository.findByReturnDueAtIsNull();
-        return availableBooks.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public LibraryBookListResponse viewBookList() {
+        List<LibraryBookEntity> allBooks = libraryRepository.findAll();
+        return new LibraryBookListResponse(
+                allBooks.stream()
+                        .map(this::convertToDto)
+                        .collect(Collectors.toList())
+        );
     }
 
-    public LibraryBookDto editLibraryBookDetails(long bookId, LibraryBookDto libraryBookDto) {
-        LibraryBookEntity libraryBookEntity = libraryRepository.findByBookId(bookId)
-                .orElseThrow(() -> new BookNotFoundException(bookId));
-        libraryBookEntity.setBorrowedAt(libraryBookDto.getTakenAt());
-        libraryBookEntity.setReturnDueAt(libraryBookDto.getReturnDueAt());
+    public LibraryBookListResponse viewAvailableBookList() {
+        List<LibraryBookEntity> availableBooks = libraryRepository.findByReturnDueAtIsNull();
+        return new LibraryBookListResponse(
+                availableBooks.stream()
+                        .map(this::convertToDto)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    public LibraryBookResponse editLibraryBookDetails(long bookId, LibraryBookRequest libraryBookRequest) {
+        LibraryBookEntity libraryBookEntity = getById(bookId);
+        libraryBookEntity.setBorrowedAt(libraryBookRequest.getTakenAt());
+        libraryBookEntity.setReturnDueAt(libraryBookRequest.getReturnDueAt());
         libraryRepository.save(libraryBookEntity);
+        log.info("Book details were edited successfully. Book ID: {}", bookId);
         return convertToDto(libraryBookEntity);
     }
 
-    public LibraryBookDto addBookToLibrary(BookRequest bookRequest) {
+    public LibraryBookResponse addBookToLibrary(BookRequest bookRequest) {
+        log.info("Adding book to the library.Book ID: {}", bookRequest.getBookId());
         LibraryBookEntity libraryBook = new LibraryBookEntity();
         libraryBook.setBookId(bookRequest.getBookId());
         libraryBook.setBorrowedAt(null);
         libraryBook.setReturnDueAt(null);
         libraryRepository.save(libraryBook);
 
-        log.info("Book was added to the library successfully.");
+        log.info("Book was added to the library successfully.Book ID: {}", bookRequest.getBookId());
         return convertToDto(libraryBook);
     }
 
     public void borrowBook(long bookId) {
         LibraryBookEntity book = getById(bookId);
         LocalDateTime borrowedAt = LocalDateTime.now();
-        LocalDateTime returnDueAt = borrowedAt.plusMonths(1);
+        LocalDateTime returnDueAt = borrowedAt.plusDays(BORROW_DURATION_DAYS);
         book.setBorrowedAt(borrowedAt);
         book.setReturnDueAt(returnDueAt);
 
         libraryRepository.save(book);
-        log.info("Book was borrowed successfully.");
+        log.info("Book was borrowed successfully. Book ID: {}", bookId);
     }
 
     public void returnBook(long bookId) {
@@ -66,22 +81,18 @@ public class LibraryServiceImpl implements LibraryService {
         book.setReturnDueAt(null);
 
         libraryRepository.save(book);
-        log.info("Book was returned successfully.");
+        log.info("Book was returned successfully. Book ID: {}", bookId);
     }
 
     public void deleteBook(long bookId) {
         LibraryBookEntity book = getById(bookId);
 
         libraryRepository.delete(book);
-        log.info("Book was deleted successfully.");
+        log.info("Book was deleted successfully. Book ID: {}", bookId);;
     }
 
-    private LibraryBookDto convertToDto(LibraryBookEntity book) {
-        return modelMapper.map(book, LibraryBookDto.class);
-    }
-
-    private LibraryBookEntity convertToEntity(LibraryBookDto bookDto) {
-        return modelMapper.map(bookDto, LibraryBookEntity.class);
+    private LibraryBookResponse convertToDto(LibraryBookEntity book) {
+        return modelMapper.map(book, LibraryBookResponse.class);
     }
 
     private LibraryBookEntity getById(long bookId) {

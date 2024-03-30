@@ -1,7 +1,9 @@
 package com.libraryapi.libraryservice.controller;
 
 import com.libraryapi.libraryservice.dto.BookRequest;
-import com.libraryapi.libraryservice.dto.LibraryBookDto;
+import com.libraryapi.libraryservice.dto.LibraryBookRequest;
+import com.libraryapi.libraryservice.dto.LibraryBookListResponse;
+import com.libraryapi.libraryservice.dto.LibraryBookResponse;
 import com.libraryapi.libraryservice.service.LibraryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,27 +16,33 @@ import java.util.List;
 @RequestMapping("api/v1/library")
 @RequiredArgsConstructor
 @Slf4j
-public class LibraryController {
+public class LibraryBookController {
 
     private final LibraryService libraryService;
 
-    @GetMapping("/availableBooks")
-    public List<LibraryBookDto> getAvailableBooks() {
+    @GetMapping
+    public LibraryBookListResponse getAllBooks(){
+        log.info("Fetching the list of books in the catalog");
+        return libraryService.viewBookList();
+    }
+
+    @GetMapping("/available-books")
+    public LibraryBookListResponse getAvailableBooks() {
         log.info("Fetching the list of available books in the catalog");
         return libraryService.viewAvailableBookList();
     }
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public LibraryBookDto add(@RequestBody BookRequest bookRequest) {
+    public LibraryBookResponse add(@RequestBody BookRequest bookRequest) {
         log.info("Adding book to the library with ID {}", bookRequest.getBookId());
         return libraryService.addBookToLibrary(bookRequest);
     }
 
     @PutMapping("/{bookId}")
-    public LibraryBookDto update(@PathVariable long bookId, @RequestBody LibraryBookDto libraryBookDto) {
+    public LibraryBookResponse update(@PathVariable long bookId, @RequestBody LibraryBookRequest libraryBookRequest) {
         log.info("Updating book with ID {}", bookId);
-        return libraryService.editLibraryBookDetails(bookId, libraryBookDto);
+        return libraryService.editLibraryBookDetails(bookId, libraryBookRequest);
 
     }
 

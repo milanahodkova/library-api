@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "library-service", fallback = LibraryClientFallback.class)
 public interface LibraryClient {
 
-    @PostMapping("/library/add")
+    @PostMapping("/api/v1/library/add")
     ResponseEntity<String> add(@RequestBody BookClientRequest bookClientRequest);
 
-    @DeleteMapping("/library/delete")
+    @DeleteMapping("/api/v1/library/delete")
     void delete(@RequestBody BookClientRequest bookClientRequest);
 }

@@ -1,20 +1,24 @@
 package com.libraryapi.libraryservice.service;
 
 import com.libraryapi.libraryservice.dto.BookRequest;
-import com.libraryapi.libraryservice.dto.LibraryBookDto;
+import com.libraryapi.libraryservice.dto.LibraryBookRequest;
+import com.libraryapi.libraryservice.dto.LibraryBookListResponse;
+import com.libraryapi.libraryservice.dto.LibraryBookResponse;
 
 import java.util.List;
 
 public interface LibraryService {
-    List<LibraryBookDto> viewAvailableBookList();
+    LibraryBookListResponse viewAvailableBookList();
 
-    LibraryBookDto editLibraryBookDetails(long bookId, LibraryBookDto libraryBookDto);
+    LibraryBookResponse editLibraryBookDetails(long bookId, LibraryBookRequest libraryBookRequest);
 
-    LibraryBookDto addBookToLibrary(BookRequest bookRequest);
+    LibraryBookResponse addBookToLibrary(BookRequest bookRequest);
 
     void borrowBook(long bookId);
 
     void returnBook(long bookId);
 
     void deleteBook(long bookId);
+
+    LibraryBookListResponse viewBookList();
 }
