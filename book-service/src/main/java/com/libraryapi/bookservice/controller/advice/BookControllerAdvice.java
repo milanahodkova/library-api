@@ -1,4 +1,4 @@
-package com.libraryapi.bookservice.controller;
+package com.libraryapi.bookservice.controller.advice;
 
 import com.libraryapi.bookservice.exception.BookAlreadyExistsException;
 import com.libraryapi.bookservice.exception.BookNotFoundException;

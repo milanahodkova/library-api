@@ -2,6 +2,6 @@ package com.libraryapi.bookservice.exception;
 
 public class BookAlreadyExistsException extends RuntimeException{
     public BookAlreadyExistsException(String isbn){
-        super("The book with ISBN " + isbn + "already exists");
+        super(String.format("The book with ISBN %s already exists", isbn));
     }
 }

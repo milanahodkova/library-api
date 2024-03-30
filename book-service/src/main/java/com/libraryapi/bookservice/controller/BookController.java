@@ -1,8 +1,8 @@
 package com.libraryapi.bookservice.controller;
 
-import com.libraryapi.bookservice.dto.BookDto;
+import com.libraryapi.bookservice.dto.BookListResponse;
 import com.libraryapi.bookservice.dto.BookRequest;
-import com.libraryapi.bookservice.client.LibraryClient;
+import com.libraryapi.bookservice.dto.BookResponse;
 import com.libraryapi.bookservice.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,54 +10,48 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/v1/books")
 @RequiredArgsConstructor
 @Slf4j
 public class BookController {
     private final BookService bookService;
-    private final LibraryClient libraryClient;
 
     @GetMapping()
-    public List<BookDto> get() {
+    public BookListResponse get() {
         log.info("Fetching the list of books in the catalog");
         return bookService.viewBookList();
     }
 
     @GetMapping("/id/{id}")
-    public BookDto getById(@PathVariable long id) {
+    public BookResponse getById(@PathVariable long id) {
         log.info("Fetching the book with ID {} from the catalog", id);
         return bookService.viewBookDetailsById(id);
     }
 
     @GetMapping("/isbn/{isbn}")
-    public BookDto getByIsbn(@PathVariable String isbn) {
+    public BookResponse getByIsbn(@PathVariable String isbn) {
         log.info("Fetching the book with ISBN {} from the catalog", isbn);
         return bookService.viewBookDetailsByIsbn(isbn);
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public BookDto add(@Valid @RequestBody BookDto bookDto) {
-        log.info("Adding a new book to the catalog with ISBN {}", bookDto.getIsbn());
-        BookDto addedBook = bookService.addBookToCatalog(bookDto);
-        libraryClient.add(new BookRequest(addedBook.getId()));
-        return addedBook;
+    public BookResponse add(@Valid @RequestBody BookRequest bookRequest) {
+        log.info("Adding a new book to the catalog with ISBN {}", bookRequest.getIsbn());
+        return bookService.addBookToCatalog(bookRequest);
     }
 
     @PutMapping("/{id}")
-    public BookDto update(@PathVariable long id, @Valid @RequestBody BookDto bookDto) {
+    public BookResponse update(@PathVariable long id, @Valid @RequestBody BookRequest bookRequest) {
         log.info("Updating book with ID {}", id);
-        return bookService.editBookDetails(id, bookDto);
+        return bookService.editBookDetails(id, bookRequest);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
+    public BookResponse delete(@PathVariable long id) {
         log.info("Deleting book with ID {}", id);
-        BookDto deletedBook = bookService.removeBookFromCatalog(id);
-        libraryClient.delete(new BookRequest(deletedBook.getId()));
+        return bookService.removeBookFromCatalog(id);
     }
 }

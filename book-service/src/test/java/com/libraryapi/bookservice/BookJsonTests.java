@@ -1,13 +1,10 @@
 package com.libraryapi.bookservice;
 
-import com.libraryapi.bookservice.dto.BookDto;
-import com.libraryapi.bookservice.model.BookEntity;
+import com.libraryapi.bookservice.dto.BookResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
-
-import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,11 +12,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BookJsonTests {
 
     @Autowired
-    private JacksonTester<BookDto> json;
+    private JacksonTester<BookResponse> json;
 
     @Test
     void testSerialize() throws Exception {
-        var book = new BookDto(1, "9781234567890", "The Catcher in the Rye",
+        var book = new BookResponse(1, "9781234567890", "The Catcher in the Rye",
                 "A novel about teenage angst", "J.D. Salinger", "Fiction");
         var jsonContent = json.write(book);
         assertThat(jsonContent).extractingJsonPathNumberValue("@.id")
@@ -50,6 +47,6 @@ public class BookJsonTests {
                 """;
         assertThat(json.parse(content))
                 .usingRecursiveComparison()
-                .isEqualTo(new BookDto(1L, "9781234567890", "The Catcher in the Rye", "A novel about teenage angst", "J.D. Salinger", "Fiction"));
+                .isEqualTo(new BookResponse(1L, "9781234567890", "The Catcher in the Rye", "A novel about teenage angst", "J.D. Salinger", "Fiction"));
     }
 }
