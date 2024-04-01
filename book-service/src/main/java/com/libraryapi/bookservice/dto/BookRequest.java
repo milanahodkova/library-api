@@ -13,20 +13,19 @@ public class BookRequest {
 
     private static final String ISBN_REGEX = "^([0-9]{10}|[0-9]{13})$";
 
-    @NotBlank(message = "message.validation.isbn")
-    @Pattern(regexp = ISBN_REGEX,
-            message = "message.validation.isbn.format")
+    @NotBlank(message = "{message.validation.isbn}")
+    @Pattern(regexp = ISBN_REGEX, message = "{message.validation.isbn.format}")
     private String isbn;
 
-    @NotBlank(message = "message.validation.title")
+    @NotBlank(message = "{message.validation.title}")
     private String title;
 
-    @NotBlank(message = "message.validation.description")
+    @NotBlank(message = "{message.validation.description}")
     private String description;
 
-    @NotBlank(message = "message.validation.author")
+    @NotBlank(message = "{message.validation.author}")
     private String author;
 
-    @NotBlank(message = "message.validation.genre")
+    @NotBlank(message = "{message.validation.genre}")
     private String genre;
 }

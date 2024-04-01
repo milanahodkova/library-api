@@ -13,6 +13,12 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+        alphanumeric-ids:
+          enabled: true
 
 server:
   port: 8090
@@ -24,6 +30,6 @@ eureka:
 
 springdoc:
   api-docs:
-    path: /book/v3/api-docs
+    path: api/v1/books/v3/api-docs
   swagger-ui:
-    path: /book/swagger-ui.html
+    path: api/v1/books/swagger-ui.html

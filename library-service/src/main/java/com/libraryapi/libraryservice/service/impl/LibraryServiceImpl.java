@@ -45,7 +45,7 @@ public class LibraryServiceImpl implements LibraryService {
 
     public LibraryBookResponse editLibraryBookDetails(long bookId, LibraryBookRequest libraryBookRequest) {
         LibraryBookEntity libraryBookEntity = getById(bookId);
-        libraryBookEntity.setBorrowedAt(libraryBookRequest.getTakenAt());
+        libraryBookEntity.setBorrowedAt(libraryBookRequest.getBorrowedAt());
         libraryBookEntity.setReturnDueAt(libraryBookRequest.getReturnDueAt());
         libraryRepository.save(libraryBookEntity);
         log.info("Book details were edited successfully. Book ID: {}", bookId);

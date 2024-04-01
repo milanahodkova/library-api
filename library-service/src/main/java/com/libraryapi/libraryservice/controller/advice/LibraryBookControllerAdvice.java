@@ -1,5 +1,6 @@
 package com.libraryapi.libraryservice.controller.advice;
 
+import com.libraryapi.libraryservice.exception.BookAlreadyExistsException;
 import com.libraryapi.libraryservice.exception.BookNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,9 @@ public class LibraryBookControllerAdvice {
         return ex.getMessage();
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception ex) {
-        log.error("An error occurred: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+    @ExceptionHandler(BookAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    String bookAlreadyExistsHandler(BookAlreadyExistsException ex) {
+        return ex.getMessage();
     }
 }

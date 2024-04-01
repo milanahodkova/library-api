@@ -10,5 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LibraryBookListResponse {
-    private List<LibraryBookResponse> bookTrackerRequestList;
+    private List<LibraryBookResponse> libraryBookResponseList;
 }

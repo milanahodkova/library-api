@@ -11,11 +11,11 @@ spring:
         - id: book-service
           uri: lb://book-service
           predicates:
-            - Path=api/v1/books/**
+            - Path=/api/v1/books/**
         - id: library-service
           uri: lb://library-service
           predicates:
-            - Path=api/v1/library/**
+            - Path=/api/v1/library/**
 
 server:
   port: 8081

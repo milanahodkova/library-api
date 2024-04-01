@@ -7,15 +7,16 @@ import com.libraryapi.bookservice.dto.BookRequest;
 import com.libraryapi.bookservice.dto.BookResponse;
 import com.libraryapi.bookservice.exception.BookAlreadyExistsException;
 import com.libraryapi.bookservice.exception.BookNotFoundException;
+import com.libraryapi.bookservice.exception.ServiceUnavailableException;
 import com.libraryapi.bookservice.model.BookEntity;
 import com.libraryapi.bookservice.repository.BookRepository;
 import com.libraryapi.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,13 +30,12 @@ public class BookServiceImpl implements BookService {
         return new BookListResponse(
                 books.stream()
                         .map(this::convertToDto)
-                        .collect(Collectors.toList())
+                        .toList()
         );
     }
 
     public BookResponse viewBookDetailsById(long id) {
-        BookEntity book = bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException(id));
+        BookEntity book = findByIdOrThrow(id);;
         return convertToDto(book);
     }
 
@@ -45,6 +45,7 @@ public class BookServiceImpl implements BookService {
         return convertToDto(book);
     }
 
+    @Transactional(rollbackFor=ServiceUnavailableException.class)
     public BookResponse addBookToCatalog(BookRequest bookRequest) {
         BookEntity book = convertToEntity(bookRequest);
         if (bookRepository.existsByIsbn(book.getIsbn())) {
@@ -56,28 +57,27 @@ public class BookServiceImpl implements BookService {
     }
 
     public BookResponse editBookDetails(long id, BookRequest bookRequest) {
-        BookEntity updatedBook = bookRepository.findById(id)
-                .map(existingBook -> {
-                    existingBook.setIsbn(bookRequest.getIsbn());
-                    existingBook.setTitle(bookRequest.getTitle());
-                    existingBook.setDescription(bookRequest.getDescription());
-                    existingBook.setAuthor(bookRequest.getAuthor());
-                    existingBook.setGenre(bookRequest.getGenre());
-                    return bookRepository.save(existingBook);
-                })
-                .orElseThrow(() -> new BookNotFoundException(id));
-
-        return convertToDto(updatedBook);
+        BookEntity updatedBook = findByIdOrThrow(id);
+        updatedBook.setIsbn(bookRequest.getIsbn());
+        updatedBook.setTitle(bookRequest.getTitle());
+        updatedBook.setDescription(bookRequest.getDescription());
+        updatedBook.setAuthor(bookRequest.getAuthor());
+        updatedBook.setGenre(bookRequest.getGenre());
+        return convertToDto(bookRepository.save(updatedBook));
     }
 
+    @Transactional(rollbackFor=ServiceUnavailableException.class)
     public BookResponse removeBookFromCatalog(long id) {
-        BookEntity deletedBook = bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException(id));
+        BookEntity deletedBook = findByIdOrThrow(id);
         bookRepository.delete(deletedBook);
         libraryClient.delete(new BookClientRequest(deletedBook.getId()));
         return convertToDto(deletedBook);
     }
 
+    private BookEntity findByIdOrThrow(long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException(id));
+    }
     private BookResponse convertToDto(BookEntity book) {
         return modelMapper.map(book, BookResponse.class);
     }

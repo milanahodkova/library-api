@@ -14,5 +14,5 @@ public interface LibraryClient {
     ResponseEntity<String> add(@RequestBody BookClientRequest bookClientRequest);
 
     @DeleteMapping("/api/v1/library/delete")
-    void delete(@RequestBody BookClientRequest bookClientRequest);
+    ResponseEntity<String> delete(@RequestBody BookClientRequest bookClientRequest);
 }

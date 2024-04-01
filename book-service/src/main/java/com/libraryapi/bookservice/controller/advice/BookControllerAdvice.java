@@ -2,6 +2,8 @@ package com.libraryapi.bookservice.controller.advice;
 
 import com.libraryapi.bookservice.exception.BookAlreadyExistsException;
 import com.libraryapi.bookservice.exception.BookNotFoundException;
+import com.libraryapi.bookservice.exception.ServiceUnavailableException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,6 +29,12 @@ public class BookControllerAdvice {
         return ex.getMessage();
     }
 
+    @ExceptionHandler(ServiceUnavailableException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    String serviceUnavailableHandler(ServiceUnavailableException ex){
+        return ex.getMessage();
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -39,5 +47,16 @@ public class BookControllerAdvice {
         return errors;
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(DataAccessException.class)
+    public DataAccessException handleDataAccessException(DataAccessException ex) {
+        return ex;
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(RuntimeException.class)
+    public RuntimeException handleRuntimeException(RuntimeException ex) {
+        return ex;
+    }
 }
 

@@ -6,10 +6,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 public class BookEntity {
 
     @Id
@@ -20,8 +22,4 @@ public class BookEntity {
     private String description;
     private String author;
     private String genre;
-
-    public BookEntity() {
-
-    }
 }
