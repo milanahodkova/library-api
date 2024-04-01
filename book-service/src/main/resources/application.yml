@@ -30,6 +30,6 @@ eureka:
 
 springdoc:
   api-docs:
-    path: api/v1/books/v3/api-docs
+    path: /api/v1/books/v3/api-docs
   swagger-ui:
-    path: api/v1/books/swagger-ui.html
+    path: /api/v1/books/swagger-ui.html

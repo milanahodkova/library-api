@@ -3,8 +3,8 @@ package com.libraryapi.libraryservice.controller.advice;
 import com.libraryapi.libraryservice.exception.BookAlreadyExistsException;
 import com.libraryapi.libraryservice.exception.BookNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,5 +23,17 @@ public class LibraryBookControllerAdvice {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     String bookAlreadyExistsHandler(BookAlreadyExistsException ex) {
         return ex.getMessage();
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(DataAccessException.class)
+    public DataAccessException handleDataAccessException(DataAccessException ex) {
+        return ex;
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(RuntimeException.class)
+    public RuntimeException handleRuntimeException(RuntimeException ex) {
+        return ex;
     }
 }
