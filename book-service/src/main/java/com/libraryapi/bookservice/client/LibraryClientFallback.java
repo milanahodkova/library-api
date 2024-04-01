@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class LibraryClientFallback implements LibraryClient {
+public class  LibraryClientFallback implements LibraryClient {
 
     private static final String ADD_ERROR_MESSAGE = "Unable to access the library service. " +
             "The book with ID %s could not be added to the library.";

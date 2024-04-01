@@ -12,13 +12,15 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
   cloud:
     openfeign:
       circuitbreaker:
         enabled: true
         alphanumeric-ids:
           enabled: true
+  liquibase:
+    change-log: classpath:db.changelog/db.changelog-master.xml
 
 server:
   port: 8090
