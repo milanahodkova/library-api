@@ -16,9 +16,14 @@ spring:
           uri: lb://library-service
           predicates:
             - Path=/api/v1/library/**
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/library-api-realm
 
 server:
-  port: 8081
+  port: 8080
 
 eureka:
   client:
