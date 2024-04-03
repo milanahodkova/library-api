@@ -5,3 +5,10 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://service-registry:8761/eureka/
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:9090/realms/library-api-realm
