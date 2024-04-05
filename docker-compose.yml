@@ -77,7 +77,6 @@ services:
       - POSTGRES_PASSWORD=1122
     volumes:
       - ./postgres-book:/data/postgres
-      - ./init-scripts:/docker-entrypoint-initdb.d
     command: -p 5431
     restart: always
 
@@ -109,7 +108,6 @@ services:
       - POSTGRES_PASSWORD=1122
     volumes:
       - ./postgres-library:/data/postgres
-    command: -p 5432
     restart: always
 
   swagger-ui:
