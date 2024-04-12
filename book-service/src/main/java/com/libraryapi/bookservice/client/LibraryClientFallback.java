@@ -16,13 +16,13 @@ public class  LibraryClientFallback implements LibraryClient {
             "Failed to delete the book with ID %s.";
 
     @Override
-    public ResponseEntity<String> add(BookClientRequest bookClientRequest) {
+    public void add(BookClientRequest bookClientRequest) {
         log.error(String.format(ADD_ERROR_MESSAGE, bookClientRequest.getBookId()));
         throw new ServiceUnavailableException(String.format(ADD_ERROR_MESSAGE, bookClientRequest.getBookId()));
     }
 
     @Override
-    public ResponseEntity<String> delete(BookClientRequest bookClientRequest) {
+    public void delete(BookClientRequest bookClientRequest) {
         log.error(String.format(DELETE_ERROR_MESSAGE, bookClientRequest.getBookId()));
         throw new ServiceUnavailableException(String.format(DELETE_ERROR_MESSAGE, bookClientRequest.getBookId()));
     }

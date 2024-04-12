@@ -14,7 +14,7 @@
                  stripComments="true"
                  path="01-create-library-table.sql"/>
         <rollback>
-            <sqlFile dbms="mysql"
+            <sqlFile dbms="postgresql"
                      encoding="utf8"
                      endDelimiter="\nGO"
                      relativeToChangelogFile="true"
