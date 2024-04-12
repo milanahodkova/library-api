@@ -48,7 +48,6 @@ services:
       - POSTGRES_PASSWORD=1122
     volumes:
       - ./postgres-books:/data/postgres
-    command: -p 5431
     restart: always
 
   library-service:
@@ -79,8 +78,36 @@ services:
       - POSTGRES_PASSWORD=1122
     volumes:
       - ./postgres-library:/data/postgres
-    command: -p 5432
     restart: always
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.2
+    hostname: keycloak
+    depends_on:
+      - postgres-keycloak
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://postgres-keycloak/keycloak
+      - KC_DB_USERNAME=postgres
+      - KC_DB_PASSWORD=1212
+    ports:
+      - '9090:8080'
+    command:
+      - start-dev
+      - --import-realm
+    volumes:
+      - ./realms:/opt/keycloak/data/import/
+
+  postgres-keycloak:
+    image: postgres:16
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1212
+    volumes:
+      - ./postgres-keycloak-data:/var/lib/postgresql/data
 
   swagger-ui:
     image: swaggerapi/swagger-ui
