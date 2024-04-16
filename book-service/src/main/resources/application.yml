@@ -35,3 +35,8 @@ springdoc:
     path: /api/v1/books/v3/api-docs
   swagger-ui:
     path: /api/v1/books/swagger-ui.html
+
+feign:
+  clients:
+    library:
+      name: library-service

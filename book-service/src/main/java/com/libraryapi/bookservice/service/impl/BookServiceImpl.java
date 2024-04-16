@@ -13,6 +13,7 @@ import com.libraryapi.bookservice.repository.BookRepository;
 import com.libraryapi.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final ModelMapper modelMapper;
+    @Qualifier("com.libraryapi.bookservice.client.LibraryClient")
     private final LibraryClient libraryClient;
 
     public BookListResponse viewBookList() {

@@ -1,9 +1,9 @@
-package com.libraryapi.bookservice.client;
+package com.libraryapi.bookservice.client.fallback;
 
+import com.libraryapi.bookservice.client.LibraryClient;
 import com.libraryapi.bookservice.dto.BookClientRequest;
 import com.libraryapi.bookservice.exception.ServiceUnavailableException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
