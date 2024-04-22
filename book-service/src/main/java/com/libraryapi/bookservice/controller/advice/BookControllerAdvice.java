@@ -1,5 +1,6 @@
 package com.libraryapi.bookservice.controller.advice;
 
+import com.libraryapi.bookservice.dto.ErrorResponse;
 import com.libraryapi.bookservice.exception.BookAlreadyExistsException;
 import com.libraryapi.bookservice.exception.BookNotFoundException;
 import com.libraryapi.bookservice.exception.ServiceUnavailableException;
@@ -12,51 +13,49 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @RestControllerAdvice
 public class BookControllerAdvice {
 
     @ExceptionHandler(BookNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String bookNotFoundHandler(BookNotFoundException ex) {
-        return ex.getMessage();
+    public ErrorResponse bookNotFoundHandler(BookNotFoundException ex) {
+        return new ErrorResponse("Not Found", HttpStatus.NOT_FOUND.value(), ex.getMessage());
     }
 
     @ExceptionHandler(BookAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    String bookAlreadyExistsHandler(BookAlreadyExistsException ex) {
-        return ex.getMessage();
+    public ErrorResponse bookAlreadyExistsHandler(BookAlreadyExistsException ex) {
+        return new ErrorResponse("Unprocessable Entity", HttpStatus.UNPROCESSABLE_ENTITY.value(), ex.getMessage());
     }
 
     @ExceptionHandler(ServiceUnavailableException.class)
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
-    String serviceUnavailableHandler(ServiceUnavailableException ex){
-        return ex.getMessage();
+    public ErrorResponse serviceUnavailableHandler(ServiceUnavailableException ex) {
+        return new ErrorResponse("Service Unavailable", HttpStatus.SERVICE_UNAVAILABLE.value(), ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ErrorResponse handleValidationExceptions(MethodArgumentNotValidException ex) {
         var errors = new HashMap<String, String>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return errors;
+        return new ErrorResponse("Bad Request", HttpStatus.BAD_REQUEST.value(), errors.toString());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(DataAccessException.class)
-    public DataAccessException handleDataAccessException(DataAccessException ex) {
-        return ex;
+    public ErrorResponse handleDataAccessException(DataAccessException ex) {
+        return new ErrorResponse("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
-    public RuntimeException handleRuntimeException(RuntimeException ex) {
-        return ex;
+    public ErrorResponse handleRuntimeException(RuntimeException ex) {
+        return new ErrorResponse("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
     }
 }
-
