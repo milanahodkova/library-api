@@ -11,11 +11,23 @@ spring:
         - id: book-service
           uri: lb://book-service
           predicates:
-            - Path=api/v1/books/**
+            - Path=/api/v1/books/**
         - id: library-service
           uri: lb://library-service
           predicates:
-            - Path=api/v1/library/**
+            - Path=/api/v1/library/**
+        - id: service-registry
+          uri: http://localhost:8761
+          predicates:
+            - Path=/eureka/**
+          filters:
+            - SetPath=/
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/library-api-realm
 
 server:
   port: 8081

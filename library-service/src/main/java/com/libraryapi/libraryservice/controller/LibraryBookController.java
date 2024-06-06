@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/v1/library")
 @RequiredArgsConstructor
@@ -32,7 +30,7 @@ public class LibraryBookController {
         return libraryService.viewAvailableBookList();
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public LibraryBookResponse add(@RequestBody BookRequest bookRequest) {
         log.info("Adding book to the library with ID {}", bookRequest.getBookId());

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://postgres-books:5432/librarydb
+    url: jdbc:postgresql://postgres-libary:5432/librarydb
     username: postgres
     password: 1122
   jpa:

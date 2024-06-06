@@ -4,6 +4,7 @@ import com.libraryapi.libraryservice.dto.BookRequest;
 import com.libraryapi.libraryservice.dto.LibraryBookRequest;
 import com.libraryapi.libraryservice.dto.LibraryBookListResponse;
 import com.libraryapi.libraryservice.dto.LibraryBookResponse;
+import com.libraryapi.libraryservice.exception.BookAlreadyExistsException;
 import com.libraryapi.libraryservice.exception.BookNotFoundException;
 import com.libraryapi.libraryservice.model.LibraryBookEntity;
 import com.libraryapi.libraryservice.repository.LibraryRepository;
@@ -30,7 +31,7 @@ public class LibraryServiceImpl implements LibraryService {
         return new LibraryBookListResponse(
                 allBooks.stream()
                         .map(this::convertToDto)
-                        .collect(Collectors.toList())
+                        .toList()
         );
     }
 
@@ -39,13 +40,13 @@ public class LibraryServiceImpl implements LibraryService {
         return new LibraryBookListResponse(
                 availableBooks.stream()
                         .map(this::convertToDto)
-                        .collect(Collectors.toList())
+                        .toList()
         );
     }
 
     public LibraryBookResponse editLibraryBookDetails(long bookId, LibraryBookRequest libraryBookRequest) {
-        LibraryBookEntity libraryBookEntity = getById(bookId);
-        libraryBookEntity.setBorrowedAt(libraryBookRequest.getTakenAt());
+        LibraryBookEntity libraryBookEntity = findByIdOrThrow(bookId);
+        libraryBookEntity.setBorrowedAt(libraryBookRequest.getBorrowedAt());
         libraryBookEntity.setReturnDueAt(libraryBookRequest.getReturnDueAt());
         libraryRepository.save(libraryBookEntity);
         log.info("Book details were edited successfully. Book ID: {}", bookId);
@@ -55,6 +56,9 @@ public class LibraryServiceImpl implements LibraryService {
     public LibraryBookResponse addBookToLibrary(BookRequest bookRequest) {
         log.info("Adding book to the library.Book ID: {}", bookRequest.getBookId());
         LibraryBookEntity libraryBook = new LibraryBookEntity();
+        if (libraryRepository.existsByBookId(bookRequest.getBookId())) {
+            throw new BookAlreadyExistsException(bookRequest.getBookId());
+        }
         libraryBook.setBookId(bookRequest.getBookId());
         libraryBook.setBorrowedAt(null);
         libraryBook.setReturnDueAt(null);
@@ -65,7 +69,7 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     public void borrowBook(long bookId) {
-        LibraryBookEntity book = getById(bookId);
+        LibraryBookEntity book = findByIdOrThrow(bookId);
         LocalDateTime borrowedAt = LocalDateTime.now();
         LocalDateTime returnDueAt = borrowedAt.plusDays(BORROW_DURATION_DAYS);
         book.setBorrowedAt(borrowedAt);
@@ -76,7 +80,7 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     public void returnBook(long bookId) {
-        LibraryBookEntity book = getById(bookId);
+        LibraryBookEntity book = findByIdOrThrow(bookId);
         book.setBorrowedAt(null);
         book.setReturnDueAt(null);
 
@@ -85,7 +89,7 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     public void deleteBook(long bookId) {
-        LibraryBookEntity book = getById(bookId);
+        LibraryBookEntity book = findByIdOrThrow(bookId);
 
         libraryRepository.delete(book);
         log.info("Book was deleted successfully. Book ID: {}", bookId);;
@@ -95,7 +99,7 @@ public class LibraryServiceImpl implements LibraryService {
         return modelMapper.map(book, LibraryBookResponse.class);
     }
 
-    private LibraryBookEntity getById(long bookId) {
+    private LibraryBookEntity findByIdOrThrow(long bookId) {
         return libraryRepository.findByBookId(bookId)
                 .orElseThrow(() -> new BookNotFoundException(bookId));
     }
